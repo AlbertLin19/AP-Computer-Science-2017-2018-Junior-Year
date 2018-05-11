@@ -9,7 +9,7 @@ public abstract class MovableGamePiece extends Ellipse2D.Double {
 	}
 	public void moveTick() {
 		x+=velocity.getXMagnitude();
-		y+=velocity.getYMagnitude();
+		y-=velocity.getYMagnitude();
 	}
 	
 	public void changeSpeed(double speedChange) {
