@@ -15,13 +15,16 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 public class ArenaComponent extends JComponent {
-	ArrayList<Shape> objects = new ArrayList<Shape>();
+	
+	static final int ProjectileID = 1, LaserBeamID = 2, HomingMissileID = 3;
+	
+	
+	ArrayList<MovableGamePiece> p1Projectiles = new ArrayList<MovableGamePiece>();
+	ArrayList<MovableGamePiece> p2Projectiles = new ArrayList<MovableGamePiece>();
 	Spaceship ship1, ship2;
 	
 	public ArenaComponent() {
 		this.addKeyListener(new KeyBinder());
-		ship1 = new Spaceship();
-		ship2 = new Spaceship();
 	}
 	
 	@Override
@@ -30,9 +33,16 @@ public class ArenaComponent extends JComponent {
 		Font myFont = new Font("Error Font", Font.BOLD, 20);
 		canvas.setFont(myFont);
 		
+		//draw the projectiles for each player in different colors
+		//eventually replace with unique icons loaded from image files
 		canvas.setColor(Color.CYAN);
-		for (Shape obj : objects) {
-			canvas.draw(obj);
+		for (MovableGamePiece piece : p1Projectiles) {
+			canvas.draw(piece);
+		}
+		
+		canvas.setColor(Color.RED);
+		for (MovableGamePiece piece : p2Projectiles) {
+			canvas.draw(piece);
 		}
 		
 		try {
@@ -43,21 +53,15 @@ public class ArenaComponent extends JComponent {
 		}
 	}
 	
-	public void moveShip(int shipNumber, int dX, int dY) {
-		if (shipNumber == 1) {
-			Point newPoint = new Point((int) ship1.getX()+dX, (int) ship1.getY()+dY);
-			ship1.setLocation(newPoint);
-		} else if (shipNumber == 2) {
-			
-		}
-	}
 
 	public void startGame() {
-		for (int i = 0; i<objects.size(); i++) {
-			objects.remove(0);
+		//clear all projecticles
+		for (int i = 0; i<p1Projectiles.size(); i++) {
+			p1Projectiles.remove(0);
 		}
-		Spaceship ship1 = new Spaceship();
-		Spaceship ship2 = new Spaceship();
+		for (int i = 0; i<p2Projectiles.size(); i++) {
+			p2Projectiles.remove(0);
+		}
 		
 		
 	}
