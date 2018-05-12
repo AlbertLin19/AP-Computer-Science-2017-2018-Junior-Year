@@ -24,10 +24,11 @@ public class ParallaxGameRunner {
 		restarter.setPreferredSize(new Dimension(300, 30));
 
 		ArenaComponent arenaComponent = new ArenaComponent();
-		arenaComponent.setPreferredSize(new Dimension(1380, 900));
+		arenaComponent.setPreferredSize(new Dimension(1400, 900));
+		arenaComponent.setFocusable(true);
 
 		TitleScreenComponent titleScreenComponent = new TitleScreenComponent();
-		titleScreenComponent.setPreferredSize(new Dimension(1380, 900));
+		titleScreenComponent.setPreferredSize(new Dimension(1400, 900));
 		
 		gamePanel.add(titleScreenComponent);
 		gamePanel.add(restarter);

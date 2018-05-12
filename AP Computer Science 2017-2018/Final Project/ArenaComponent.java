@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class ArenaComponent extends JComponent {
 	public ArenaComponent() {
 		this.addKeyListener(new KeyBinder());
 
-		gameTickTimer = new Timer(100, new GameTickTimer());
+		gameTickTimer = new Timer(40, new GameTickTimer());
 		
 		// load background image
 		try {
@@ -48,8 +49,9 @@ public class ArenaComponent extends JComponent {
 		Font myFont = new Font("Game Font", Font.BOLD, 20);
 		canvas.setFont(myFont);
 		canvas.fillRect(0, 0, getWidth(), getHeight());
+		
 		if (backgroundImage != null) {
-			canvas.drawImage(backgroundImage, null, 0, 0);
+			canvas.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		} else {
 			canvas.drawString("GRAPHICS FILE NOT FOUND! MAKE SURE YOU HAVE THE GRAPHICS FOLDER INSIDE THE PROJECT", getWidth()/2-300, getHeight()/2);
 		}
@@ -61,6 +63,7 @@ public class ArenaComponent extends JComponent {
 			canvas.draw(ammo);
 		}
 		canvas.fill(ship1);
+		
 
 		canvas.setColor(Color.RED);
 		for (Ammo ammo : p2Projectiles) {
@@ -73,9 +76,10 @@ public class ArenaComponent extends JComponent {
 	}
 
 	public void startGame() {
+		gameTickTimer.stop();
 		removeAllPieces();
-		ship1 = new Spaceship(100, 100, Math.PI*3/2, 1);
-		ship2 = new Spaceship(getWidth()-100, getHeight()-100, Math.PI/2, 0);
+		ship1 = new Spaceship(100, 100, Math.PI*3/2, 0);
+		ship2 = new Spaceship(getWidth()-100, getHeight()-200, Math.PI/2, 0);
 		
 		gameTickTimer.start();
 	}
@@ -86,6 +90,10 @@ public class ArenaComponent extends JComponent {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//accelerate ships
+			ship1.changeVelocityTick();
+			ship2.changeVelocityTick();
+			
 			// move all pieces
 			ship1.moveTick();
 			ship2.moveTick();
@@ -137,19 +145,69 @@ public class ArenaComponent extends JComponent {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
+			System.out.println("keyTyped: " + e.getKeyChar());
 
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
+			System.out.println("keyPressed: " + e.getKeyCode());
+			
+			if (e.getKeyChar()=='w') {
+				ship1.setAccelForward(true);
+			}
+			if (e.getKeyChar()=='s') {
+				ship1.setAccelBackward(true);
+			}
+			if (e.getKeyChar()=='a') {
+				ship1.setTurnLeft(true);
+			}
+			if (e.getKeyChar()=='d') {
+				ship1.setTurnRight(true);
+			}
+			if (e.getKeyCode()==38) {
+				ship2.setAccelForward(true);
+			}
+			if (e.getKeyCode()==40) {
+				ship2.setAccelBackward(true);
+			}
+			if (e.getKeyCode()==37) {
+				ship2.setTurnLeft(true);
+			}
+			if (e.getKeyCode()==39) {
+				ship2.setTurnRight(true);
+			}
 
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
+			System.out.println("keyReleased: " + e.getKeyChar());
+			
+			if (e.getKeyChar()=='w') {
+				ship1.setAccelForward(false);
+			}
+			if (e.getKeyChar()=='s') {
+				ship1.setAccelBackward(false);
+			}
+			if (e.getKeyChar()=='a') {
+				ship1.setTurnLeft(false);
+			}
+			if (e.getKeyChar()=='d') {
+				ship1.setTurnRight(false);
+			}
+			if (e.getKeyCode()==38) {
+				ship2.setAccelForward(false);
+			}
+			if (e.getKeyCode()==40) {
+				ship2.setAccelBackward(false);
+			}
+			if (e.getKeyCode()==37) {
+				ship2.setTurnLeft(false);
+			}
+			if (e.getKeyCode()==39) {
+				ship2.setTurnRight(false);
+			}
 
 		}
 

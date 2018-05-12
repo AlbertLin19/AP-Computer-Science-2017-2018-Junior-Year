@@ -6,8 +6,9 @@ import javax.swing.Timer;
 
 public class Spaceship extends MovableGamePiece {
 
-	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 8, width = 120, height = 40;
+	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 8, width = 40, height = 100, turnAccel = 0.1, accel = 0.8;
 	private double health, damageMult, shield;
+	private boolean accelForward, accelBackward, turnLeft, turnRight = false;
 	
 	private final static int maxAmmoCount = 5;
 	private ArrayList<Integer> ammoInventory;
@@ -71,6 +72,34 @@ public class Spaceship extends MovableGamePiece {
 			velocity.setMagnitude(-maxSpeed);
 		}
 		
+	}
+	
+	public void changeVelocityTick() {
+		if (accelForward && !accelBackward) {
+			changeSpeed(accel);
+		} else if (accelBackward && !accelForward) {
+			changeSpeed(-accel);
+		}
+		
+		if (turnLeft && !turnRight) {
+			changeAngle(turnAccel);
+		} else if (turnRight && !turnLeft) {
+			changeAngle(-turnAccel);
+		}
+	
+	}
+	
+	public void setAccelForward(boolean state) {
+		accelForward = state;
+	}
+	public void setAccelBackward(boolean state) {
+		accelBackward = state;
+	}
+	public void setTurnLeft(boolean state) {
+		turnLeft = state;
+	}
+	public void setTurnRight(boolean state) {
+		turnRight = state;
 	}
 	
 	class ShieldRefresher implements ActionListener {
