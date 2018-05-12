@@ -56,21 +56,40 @@ public class ArenaComponent extends JComponent {
 			canvas.drawString("GRAPHICS FILE NOT FOUND! MAKE SURE YOU HAVE THE GRAPHICS FOLDER INSIDE THE PROJECT", getWidth()/2-300, getHeight()/2);
 		}
 
-		// draw the projectiles for each player in different colors
-		// eventually replace with unique icons loaded from image files
-		canvas.setColor(Color.CYAN);
-		for (Ammo ammo : p1Projectiles) {
-			canvas.draw(ammo);
-		}
+		AffineTransform old = canvas.getTransform();
+		
 		canvas.fill(ship1);
 		
-
-		canvas.setColor(Color.RED);
-		for (Ammo ammo : p2Projectiles) {
-			canvas.draw(ammo);
-		}
-		canvas.fill(ship2);
+		// draw the projectiles for each player in different colors
+		// eventually replace with unique icons loaded from image files
 		
+		for (Ammo ammo : p1Projectiles) {
+			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
+			canvas.setTransform(transform);
+			canvas.drawImage(ammo.getIcon(), null, (int) ammo.getX(), (int) ammo.getY());
+			canvas.setTransform(old);
+		}
+		
+		AffineTransform transform1 = AffineTransform.getRotateInstance(-ship1.getVelocityAngle()+Math.PI/2, ship1.getCenterX(), ship1.getCenterY());
+		canvas.setTransform(transform1);
+		canvas.drawImage(ship1.getIcon(), null, (int) ship1.getX(), (int) ship1.getY());
+		canvas.setColor(Color.CYAN);
+		canvas.draw(ship1);
+		canvas.setTransform(old);
+		
+		for (Ammo ammo : p2Projectiles) {
+			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
+			canvas.setTransform(transform);
+			canvas.drawImage(ammo.getIcon(), null, (int) ammo.getX(), (int) ammo.getY());
+			canvas.setTransform(old);
+		}
+		
+		AffineTransform transform2 = AffineTransform.getRotateInstance(-ship2.getVelocityAngle()+Math.PI/2, ship2.getCenterX(), ship2.getCenterY());
+		canvas.setTransform(transform2);
+		canvas.drawImage(ship2.getIcon(), null, (int) ship2.getX(), (int) ship2.getY());
+		canvas.setColor(Color.RED);
+		canvas.draw(ship2);
+		canvas.setTransform(old);
 		
 
 	}

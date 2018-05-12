@@ -1,12 +1,16 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
 public class Spaceship extends MovableGamePiece {
 
-	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 8, width = 40, height = 100, turnAccel = 0.1, accel = 0.8;
+	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 16, width = 40, height = 100, turnAccel = 0.1, accel = 0.6;
 	private double health, damageMult, shield;
 	private boolean accelForward, accelBackward, turnLeft, turnRight = false;
 	
@@ -122,6 +126,11 @@ public class Spaceship extends MovableGamePiece {
 			
 		}
 		
+	}
+
+	@Override
+	public BufferedImage loadIcon() throws IOException {
+		return ImageIO.read(new File("FinalProjectParallaxGameGraphics/fighterJet.png"));
 	}
 	
 }

@@ -1,5 +1,6 @@
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public abstract class MovableGamePiece extends Ellipse2D.Double {
 	protected Vector velocity;
@@ -8,6 +9,12 @@ public abstract class MovableGamePiece extends Ellipse2D.Double {
 	public MovableGamePiece(int xLoc, int yLoc, double angle, double speed, double width, double height) {
 		super(xLoc, yLoc, width, height);
 		velocity = new Vector(angle, speed);
+		try {
+			image = loadIcon();
+		} catch (IOException e) {
+			System.out.println("cannot assign graphic to a gamepiece!");
+			e.printStackTrace();
+		}
 	}
 	public void moveTick() {
 		x+=velocity.getXMagnitude();
@@ -25,5 +32,11 @@ public abstract class MovableGamePiece extends Ellipse2D.Double {
 	public double getVelocityAngle() {
 		return velocity.getAngle();
 	}
+	
+	public BufferedImage getIcon() {
+		return image;
+	}
+	
+	abstract public BufferedImage loadIcon() throws IOException;
 
 }
