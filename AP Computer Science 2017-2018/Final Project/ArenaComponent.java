@@ -58,21 +58,19 @@ public class ArenaComponent extends JComponent {
 
 		AffineTransform old = canvas.getTransform();
 		
-		canvas.fill(ship1);
-		
 		// draw the projectiles for each player in different colors
 		// eventually replace with unique icons loaded from image files
 		
 		for (Ammo ammo : p1Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
-			canvas.drawImage(ammo.getIcon(), null, (int) ammo.getX(), (int) ammo.getY());
+			canvas.drawImage(ammo.getIcon(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
 			canvas.setTransform(old);
 		}
 		
 		AffineTransform transform1 = AffineTransform.getRotateInstance(-ship1.getVelocityAngle()+Math.PI/2, ship1.getCenterX(), ship1.getCenterY());
 		canvas.setTransform(transform1);
-		canvas.drawImage(ship1.getIcon(), null, (int) ship1.getX(), (int) ship1.getY());
+		canvas.drawImage(ship1.getIcon(), (int) (ship1.getX()-ship1.getWidth()/2), (int) ship1.getY(), (int) ship1.getWidth()*2, (int) ship1.getHeight(), null);
 		canvas.setColor(Color.CYAN);
 		canvas.draw(ship1);
 		canvas.setTransform(old);
@@ -86,7 +84,7 @@ public class ArenaComponent extends JComponent {
 		
 		AffineTransform transform2 = AffineTransform.getRotateInstance(-ship2.getVelocityAngle()+Math.PI/2, ship2.getCenterX(), ship2.getCenterY());
 		canvas.setTransform(transform2);
-		canvas.drawImage(ship2.getIcon(), null, (int) ship2.getX(), (int) ship2.getY());
+		canvas.drawImage(ship2.getIcon(), (int) (ship2.getX()-ship2.getWidth()/2), (int) ship2.getY(), (int) ship2.getWidth()*2, (int) ship2.getHeight(), null);
 		canvas.setColor(Color.RED);
 		canvas.draw(ship2);
 		canvas.setTransform(old);
@@ -113,15 +111,25 @@ public class ArenaComponent extends JComponent {
 			ship1.changeVelocityTick();
 			ship2.changeVelocityTick();
 			
-			// move all pieces
+			// move all pieces and remove out-of-bounds
 			ship1.moveTick();
 			ship2.moveTick();
-			for (Ammo ammo : p1Projectiles) {
-				ammo.moveTick();
+			for (int i = 0; i < p1Projectiles.size(); i++) {
+				p1Projectiles.get(i).moveTick();
+				if (!inFrame(p1Projectiles.get(i))) {
+					p1Projectiles.remove(i);
+					i--;
+				}
 			}
-			for (Ammo ammo : p2Projectiles) {
-				ammo.moveTick();
+			for (int i = 0; i < p2Projectiles.size(); i++) {
+				p2Projectiles.get(i).moveTick();
+				if (!inFrame(p2Projectiles.get(i))) {
+					p2Projectiles.remove(i);
+					i--;
+				}
 			}
+			
+			keepShipsInFrame();
 			
 			repaint();
 
@@ -157,6 +165,35 @@ public class ArenaComponent extends JComponent {
 		//nullify the ships
 		ship1 = null;
 		ship2 = null;
+	}
+	
+	private boolean inFrame(MovableGamePiece obj) {
+		return obj.getMinY()<this.getHeight() && obj.getMinX()<this.getWidth() && obj.getMaxX() > 0 && obj.getMaxY() > 0;
+	}
+	
+	private void keepShipsInFrame() {
+		if (ship1.getMinX() < 0) {
+			ship1.x = 0;
+		} else if (ship1.getMaxX() > getWidth()) {
+			ship1.x = getWidth()-ship1.width;
+		}
+		if (ship1.getMinY() < 0) {
+			ship1.y = 0;
+		} else if (ship1.getMaxY() > getHeight()) {
+			ship1.y = getHeight()-ship1.height;
+		}
+		
+		if (ship2.getMinX() < 0) {
+			ship2.x = 0;
+		} else if (ship2.getMaxX() > getWidth()) {
+			ship2.x = getWidth()-ship2.width;
+		}
+		if (ship2.getMinY() < 0) {
+			ship2.y = 0;
+		} else if (ship2.getMaxY() > getHeight()) {
+			ship2.y = getHeight()-ship2.height;
+		}
+		
 	}
 
 	// defining all key bindings
