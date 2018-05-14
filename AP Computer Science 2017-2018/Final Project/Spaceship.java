@@ -10,7 +10,7 @@ import javax.swing.Timer;
 
 public class Spaceship extends MovableGamePiece {
 
-	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 16, width = 40, height = 100, turnAccel = 0.1, accel = 0.6;
+	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 12, width = 40, height = 100, turnAccel = 0.2, accel = 0.6;
 	private double health, damageMult, shield;
 	private boolean accelForward, accelBackward, turnLeft, turnRight = false;
 	
@@ -39,6 +39,8 @@ public class Spaceship extends MovableGamePiece {
 		Timer shieldRefresher = new Timer(10000, new ShieldRefresher());
 		Timer ammoReloader = new Timer(3000, new AmmoReloader());
 		
+		ammoReloader.start();
+		
 		//should add in an instance variable to hold the image of the ship, and load the image file here
 	}
 	
@@ -58,7 +60,10 @@ public class Spaceship extends MovableGamePiece {
 	}
 	
 	public int useAmmo() {
+		if (ammoInventory.size()>0)
 		return ammoInventory.remove(0);
+		else
+		return -1;
 	}
 	
 	public void addAmmo(int ammoID) {

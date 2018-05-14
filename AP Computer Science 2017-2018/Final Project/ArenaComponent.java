@@ -78,7 +78,7 @@ public class ArenaComponent extends JComponent {
 		for (Ammo ammo : p2Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
-			canvas.drawImage(ammo.getIcon(), null, (int) ammo.getX(), (int) ammo.getY());
+			canvas.drawImage(ammo.getIcon(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
 			canvas.setTransform(old);
 		}
 		
@@ -145,8 +145,13 @@ public class ArenaComponent extends JComponent {
 				}
 			}
 			
-			if (ship1.getHealth()<0 || ship2.getHealth()<0) {
-				gameTickTimer.stop();
+			if (ship1.getHealth()<0) {
+				ship1.x = 100000;
+				ship1.y = 100000;
+			}
+			if (ship2.getHealth()<0) {
+				ship2.x = 100000;
+				ship2.y = 100000;
 			}
 
 		}
@@ -212,26 +217,48 @@ public class ArenaComponent extends JComponent {
 			if (e.getKeyChar()=='w') {
 				ship1.setAccelForward(true);
 			}
-			if (e.getKeyChar()=='s') {
+			else if (e.getKeyChar()=='s') {
 				ship1.setAccelBackward(true);
 			}
-			if (e.getKeyChar()=='a') {
+			else if (e.getKeyChar()=='a') {
 				ship1.setTurnLeft(true);
 			}
-			if (e.getKeyChar()=='d') {
+			else if (e.getKeyChar()=='d') {
 				ship1.setTurnRight(true);
 			}
-			if (e.getKeyCode()==38) {
+			else if (e.getKeyCode()==38) {
 				ship2.setAccelForward(true);
 			}
-			if (e.getKeyCode()==40) {
+			else if (e.getKeyCode()==40) {
 				ship2.setAccelBackward(true);
 			}
-			if (e.getKeyCode()==37) {
+			else if (e.getKeyCode()==37) {
 				ship2.setTurnLeft(true);
 			}
-			if (e.getKeyCode()==39) {
+			else if (e.getKeyCode()==39) {
 				ship2.setTurnRight(true);
+			}
+			
+			else if (e.getKeyChar()=='f') {
+				int ID = ship1.useAmmo();
+				if (ID == ProjectileID) {
+					p1Projectiles.add(new Projectile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
+				} else if (ID == LaserBeamID) {
+					//TODO: implement
+				} else if (ID == HomingMissileID) {
+					//TODO: implement
+				}
+			}
+			
+			else if (e.getKeyCode()==32) {
+				int ID = ship2.useAmmo();
+				if (ID == ProjectileID) {
+					p2Projectiles.add(new Projectile((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
+				} else if (ID == LaserBeamID) {
+					//TODO: implement
+				} else if (ID == HomingMissileID) {
+					//TODO: implement
+				}
 			}
 
 		}
@@ -243,25 +270,25 @@ public class ArenaComponent extends JComponent {
 			if (e.getKeyChar()=='w') {
 				ship1.setAccelForward(false);
 			}
-			if (e.getKeyChar()=='s') {
+			else if (e.getKeyChar()=='s') {
 				ship1.setAccelBackward(false);
 			}
-			if (e.getKeyChar()=='a') {
+			else if (e.getKeyChar()=='a') {
 				ship1.setTurnLeft(false);
 			}
-			if (e.getKeyChar()=='d') {
+			else if (e.getKeyChar()=='d') {
 				ship1.setTurnRight(false);
 			}
-			if (e.getKeyCode()==38) {
+			else if (e.getKeyCode()==38) {
 				ship2.setAccelForward(false);
 			}
-			if (e.getKeyCode()==40) {
+			else if (e.getKeyCode()==40) {
 				ship2.setAccelBackward(false);
 			}
-			if (e.getKeyCode()==37) {
+			else if (e.getKeyCode()==37) {
 				ship2.setTurnLeft(false);
 			}
-			if (e.getKeyCode()==39) {
+			else if (e.getKeyCode()==39) {
 				ship2.setTurnRight(false);
 			}
 
