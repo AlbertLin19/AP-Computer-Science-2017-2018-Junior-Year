@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 
 public class ParallaxGameRunner {
 	static boolean started = false;
+	static final int arenaWidth = 1400;
+	static final int arenaHeight = 900;
 
 	public static void main(String[] args) {
 
@@ -24,11 +26,10 @@ public class ParallaxGameRunner {
 		restarter.setPreferredSize(new Dimension(300, 30));
 
 		ArenaComponent arenaComponent = new ArenaComponent();
-		arenaComponent.setPreferredSize(new Dimension(1400, 900));
-		arenaComponent.setFocusable(true);
+		arenaComponent.setPreferredSize(new Dimension(arenaWidth, arenaHeight));
 
 		TitleScreenComponent titleScreenComponent = new TitleScreenComponent();
-		titleScreenComponent.setPreferredSize(new Dimension(1400, 900));
+		titleScreenComponent.setPreferredSize(new Dimension(arenaWidth, arenaHeight));
 		
 		gamePanel.add(titleScreenComponent);
 		gamePanel.add(restarter);
@@ -45,6 +46,7 @@ public class ParallaxGameRunner {
 					gamePanel.removeAll();
 					gamePanel.add(arenaComponent);
 					gamePanel.add(restarter);
+					arenaComponent.grabFocus();
 				}
 				
 				arenaComponent.startGame();
