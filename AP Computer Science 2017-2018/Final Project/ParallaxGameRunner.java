@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 
 public class ParallaxGameRunner {
 	static boolean started = false;
-	static final int arenaWidth = 1400;
-	static final int arenaHeight = 900;
+	public static final int arenaWidth = 1400;
+	public static final int arenaHeight = 900;
 
 	public static void main(String[] args) {
 
