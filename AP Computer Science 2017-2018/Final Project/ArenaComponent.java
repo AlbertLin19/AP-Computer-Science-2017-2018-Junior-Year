@@ -239,6 +239,15 @@ public class ArenaComponent extends JComponent {
 		}
 		
 	}
+	
+	//these accessor methods are simply to make sure that the returned constants are consistent
+	public int getWidth() {
+		return ParallaxGameRunner.arenaWidth;
+	}
+	
+	public int getHeight() {
+		return ParallaxGameRunner.arenaHeight;
+	}
 
 	// defining all key bindings
 	class KeyBinder implements KeyListener {
