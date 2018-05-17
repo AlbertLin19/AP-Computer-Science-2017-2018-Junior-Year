@@ -65,6 +65,7 @@ public class ArenaComponent extends JComponent {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
 			canvas.drawImage(ammo.getIcon(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
+			canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
@@ -79,6 +80,7 @@ public class ArenaComponent extends JComponent {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
 			canvas.drawImage(ammo.getIcon(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
+			canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
