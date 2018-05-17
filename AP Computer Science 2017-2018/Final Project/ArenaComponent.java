@@ -177,14 +177,16 @@ public class ArenaComponent extends JComponent {
 			repaint();
 
 			// check all collisions
-			for (Ammo p1 : p1Projectiles) {
-				if (ship2.contains(p1.getBounds2D())) {
-					ship2.takeDamage(p1.getDamage());
+			for (int i = 0; i < p1Projectiles.size(); i++) {
+				if (ship2.contains(p1Projectiles.get(i).getBounds2D())) {
+					ship2.takeDamage(p1Projectiles.remove(i).getDamage());
+					i--;
 				}
 			}
-			for (Ammo p2 : p2Projectiles) {
-				if (ship1.contains(p2.getBounds2D())) {
-					ship1.takeDamage(p2.getDamage());
+			for (int i = 0; i < p2Projectiles.size(); i++) {
+				if (ship1.contains(p2Projectiles.get(i).getBounds2D())) {
+					ship1.takeDamage(p2Projectiles.remove(i).getDamage());
+					i--;
 				}
 			}
 			
