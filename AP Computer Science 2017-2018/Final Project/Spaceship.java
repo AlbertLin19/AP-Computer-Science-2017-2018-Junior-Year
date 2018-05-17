@@ -38,9 +38,9 @@ public class Spaceship extends MovableGamePiece {
 		//setting up the object's constant refreshers
 		Timer shieldRefresher = new Timer(10000, new ShieldRefresher());
 		Timer ammoReloader = new Timer(3000, new AmmoReloader());
-		
+
+		shieldRefresher.start();
 		ammoReloader.start();
-		
 		//should add in an instance variable to hold the image of the ship, and load the image file here
 	}
 	
@@ -136,6 +136,14 @@ public class Spaceship extends MovableGamePiece {
 	@Override
 	public BufferedImage loadIcon() throws IOException {
 		return ImageIO.read(new File("FinalProjectParallaxGameGraphics/fighterJet.png"));
+	}
+
+	public double getShield() {
+		return shield;
+	}
+
+	public int getAmmoCount() {
+		return ammoInventory.size();
 	}
 	
 }

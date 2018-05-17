@@ -89,7 +89,46 @@ public class ArenaComponent extends JComponent {
 		canvas.draw(ship2);
 		canvas.setTransform(old);
 		
-
+		//drawing health bars, shield bars, and game info
+		int barHeight = 30;
+		int barWidth = 300;
+		int x1 = 200;
+		int x2 = this.getWidth()-x1-barWidth;
+		int y = this.getHeight()-100;
+		canvas.setColor(Color.DARK_GRAY);
+		canvas.fillRect(x1, y, barWidth, barHeight);
+		canvas.fillRect(x2, y, barWidth, barHeight);
+		
+		int healthLength1 = (int) ((ship1.getHealth()/(ship1.healthMax+ship1.shieldMax))*barWidth);
+		int healthLength2 = (int) ((ship2.getHealth()/(ship2.healthMax+ship2.shieldMax))*barWidth);
+		int shieldLength1 = (int) ((ship1.getShield()/(ship1.healthMax+ship1.shieldMax))*barWidth);
+		int shieldLength2 = (int) ((ship2.getShield()/(ship2.healthMax+ship2.shieldMax))*barWidth);
+		canvas.setColor(Color.GREEN);
+		canvas.fillRect(x1, y, healthLength1, barHeight);
+		canvas.fillRect(x2, y, healthLength2, barHeight);
+		canvas.setColor(Color.CYAN);
+		canvas.fillRect(x1+healthLength1, y, shieldLength1, barHeight);
+		canvas.fillRect(x2+healthLength2, y, shieldLength2, barHeight);
+		
+		//showing ammo count
+		
+		
+		int spacing = 30;
+		int size = 16;
+		int offset = 10;
+		
+		canvas.setColor(Color.DARK_GRAY);
+		canvas.fillRect(x1, y-2*offset, barWidth, 2*offset);
+		canvas.fillRect(x2, y-2*offset, barWidth, 2*offset);
+		
+		canvas.setColor(Color.ORANGE);
+		for (int i = 0; i < ship1.getAmmoCount(); i++) {
+			canvas.fillOval(x1+i*spacing, y-offset-size/2, size, size);
+		}
+		for (int i = 0; i < ship2.getAmmoCount(); i++) {
+			canvas.fillOval(x2+i*spacing, y-offset-size/2, size, size);
+		}
+		
 	}
 
 	public void startGame() {
@@ -239,7 +278,7 @@ public class ArenaComponent extends JComponent {
 				ship2.setTurnRight(true);
 			}
 			
-			else if (e.getKeyChar()=='f') {
+			else if (e.getKeyCode()==16) {
 				int ID = ship1.useAmmo();
 				if (ID == ProjectileID) {
 					p1Projectiles.add(new Projectile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
