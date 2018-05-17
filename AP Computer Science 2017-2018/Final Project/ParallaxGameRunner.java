@@ -27,6 +27,7 @@ public class ParallaxGameRunner {
 
 		ArenaComponent arenaComponent = new ArenaComponent();
 		arenaComponent.setPreferredSize(new Dimension(arenaWidth, arenaHeight));
+		arenaComponent.setFocusable(true);
 
 		TitleScreenComponent titleScreenComponent = new TitleScreenComponent();
 		titleScreenComponent.setPreferredSize(new Dimension(arenaWidth, arenaHeight));
@@ -46,9 +47,9 @@ public class ParallaxGameRunner {
 					gamePanel.removeAll();
 					gamePanel.add(arenaComponent);
 					gamePanel.add(restarter);
-					arenaComponent.grabFocus();
 				}
 				
+				arenaComponent.grabFocus();
 				arenaComponent.startGame();
 				
 			}
