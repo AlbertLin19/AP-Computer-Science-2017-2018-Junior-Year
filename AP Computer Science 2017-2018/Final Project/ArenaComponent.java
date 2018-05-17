@@ -61,6 +61,7 @@ public class ArenaComponent extends JComponent {
 		// draw the projectiles for each player in different colors
 		// eventually replace with unique icons loaded from image files
 		
+		canvas.setColor(Color.CYAN);
 		for (Ammo ammo : p1Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
@@ -76,6 +77,7 @@ public class ArenaComponent extends JComponent {
 		canvas.draw(ship1);
 		canvas.setTransform(old);
 		
+		canvas.setColor(Color.RED);
 		for (Ammo ammo : p2Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
