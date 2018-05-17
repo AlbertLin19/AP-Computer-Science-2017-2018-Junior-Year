@@ -216,8 +216,8 @@ public class ArenaComponent extends JComponent {
 	}
 	
 	private void keepShipsInFrame() {
-		if (ship1.getMinX() < 0) {
-			ship1.x = 0;
+		if (ship1.getMinX()-ship1.getHeight() < 0) {
+			ship1.x = ship1.getHeight();
 		} else if (ship1.getMaxX() > getWidth()) {
 			ship1.x = getWidth()-ship1.width;
 		}
@@ -227,8 +227,8 @@ public class ArenaComponent extends JComponent {
 			ship1.y = getHeight()-ship1.height;
 		}
 		
-		if (ship2.getMinX() < 0) {
-			ship2.x = 0;
+		if (ship2.getMinX()-ship2.getHeight() < 0) {
+			ship2.x = ship2.getHeight();
 		} else if (ship2.getMaxX() > getWidth()) {
 			ship2.x = getWidth()-ship2.width;
 		}
