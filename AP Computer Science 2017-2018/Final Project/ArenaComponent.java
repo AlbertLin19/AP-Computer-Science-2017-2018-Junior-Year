@@ -2,11 +2,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -157,16 +159,30 @@ public class ArenaComponent extends JComponent {
 			// move all pieces and remove out-of-bounds
 			ship1.moveTick();
 			ship2.moveTick();
+			
+			//moving projectiles and drawing a line to find intersects
+			// check all collisions
+			
 			for (int i = 0; i < p1Projectiles.size(); i++) {
+				Point prevPoint = new Point((int) p1Projectiles.get(i).getCenterX(), (int) p1Projectiles.get(i).getCenterY());
 				p1Projectiles.get(i).moveTick();
-				if (!inFrame(p1Projectiles.get(i))) {
+				Point nextPoint = new Point((int) p1Projectiles.get(i).getCenterX(), (int) p1Projectiles.get(i).getCenterY());
+				if (new Line2D.Double(prevPoint, nextPoint).intersects(ship2.getBounds2D())) {
+					ship2.takeDamage(p1Projectiles.remove(i).getDamage());
+					i--;
+				} else if (!inFrame(p1Projectiles.get(i))) {
 					p1Projectiles.remove(i);
 					i--;
 				}
 			}
 			for (int i = 0; i < p2Projectiles.size(); i++) {
+				Point prevPoint = new Point((int) p2Projectiles.get(i).getCenterX(), (int) p2Projectiles.get(i).getCenterY());
 				p2Projectiles.get(i).moveTick();
-				if (!inFrame(p2Projectiles.get(i))) {
+				Point nextPoint = new Point((int) p2Projectiles.get(i).getCenterX(), (int) p2Projectiles.get(i).getCenterY());
+				if (new Line2D.Double(prevPoint, nextPoint).intersects(ship1.getBounds2D())) {
+					ship1.takeDamage(p2Projectiles.remove(i).getDamage());
+					i--;
+				} else if (!inFrame(p2Projectiles.get(i))) {
 					p2Projectiles.remove(i);
 					i--;
 				}
@@ -175,20 +191,6 @@ public class ArenaComponent extends JComponent {
 			keepShipsInFrame();
 			
 			repaint();
-
-			// check all collisions
-			for (int i = 0; i < p1Projectiles.size(); i++) {
-				if (ship2.contains(p1Projectiles.get(i).getBounds2D())) {
-					ship2.takeDamage(p1Projectiles.remove(i).getDamage());
-					i--;
-				}
-			}
-			for (int i = 0; i < p2Projectiles.size(); i++) {
-				if (ship1.contains(p2Projectiles.get(i).getBounds2D())) {
-					ship1.takeDamage(p2Projectiles.remove(i).getDamage());
-					i--;
-				}
-			}
 			
 			if (ship1.getHealth()<0) {
 				ship1.x = 100000;
