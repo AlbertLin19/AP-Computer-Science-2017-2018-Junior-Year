@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Projectile extends Ammo {
-	private final static double size = 20, damage = 250, speed = 30;
+	private final static double size = 30, damage = 250, speed = 50;
 	
 	
 	public Projectile(int xLoc, int yLoc, double angle) {

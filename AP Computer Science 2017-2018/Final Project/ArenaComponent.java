@@ -78,6 +78,7 @@ public class ArenaComponent extends JComponent {
 		canvas.setColor(Color.CYAN);
 		canvas.draw(ship1);
 		canvas.setTransform(old);
+		canvas.drawString("P1", (int) ship1.getCenterX(), (int) ship1.getY()-30);
 		
 		canvas.setColor(Color.RED);
 		for (Ammo ammo : p2Projectiles) {
@@ -94,6 +95,7 @@ public class ArenaComponent extends JComponent {
 		canvas.setColor(Color.RED);
 		canvas.draw(ship2);
 		canvas.setTransform(old);
+		canvas.drawString("P2", (int) ship2.getCenterX(), (int) ship2.getY()-30);
 		
 		//drawing health bars, shield bars, and game info
 		int barHeight = 30;
@@ -102,7 +104,10 @@ public class ArenaComponent extends JComponent {
 		int x2 = this.getWidth()-x1-barWidth;
 		int y = this.getHeight()-100;
 		canvas.setColor(Color.DARK_GRAY);
+		
+		if (ship1.getHealth()>0)
 		canvas.fillRect(x1, y, barWidth, barHeight);
+		if (ship2.getHealth()>0)
 		canvas.fillRect(x2, y, barWidth, barHeight);
 		
 		int healthLength1 = (int) ((ship1.getHealth()/(ship1.healthMax+ship1.shieldMax))*barWidth);
@@ -110,30 +115,45 @@ public class ArenaComponent extends JComponent {
 		int shieldLength1 = (int) ((ship1.getShield()/(ship1.healthMax+ship1.shieldMax))*barWidth);
 		int shieldLength2 = (int) ((ship2.getShield()/(ship2.healthMax+ship2.shieldMax))*barWidth);
 		canvas.setColor(Color.GREEN);
+		if (ship1.getHealth()>0)
 		canvas.fillRect(x1, y, healthLength1, barHeight);
+		if (ship2.getHealth()>0)
 		canvas.fillRect(x2, y, healthLength2, barHeight);
 		canvas.setColor(Color.CYAN);
+		if (ship1.getHealth()>0)
 		canvas.fillRect(x1+healthLength1, y, shieldLength1, barHeight);
+		if (ship2.getHealth()>0)
 		canvas.fillRect(x2+healthLength2, y, shieldLength2, barHeight);
 		
 		//showing ammo count
-		
+		//TODO: condense the following if statements to improve efficiency, instead of checking every time whether the spaceship is still alive
 		
 		int spacing = 30;
 		int size = 16;
 		int offset = 10;
 		
 		canvas.setColor(Color.DARK_GRAY);
+		if (ship1.getHealth()>0)
 		canvas.fillRect(x1, y-2*offset, barWidth, 2*offset);
+		if (ship2.getHealth()>0)
 		canvas.fillRect(x2, y-2*offset, barWidth, 2*offset);
 		
 		canvas.setColor(Color.ORANGE);
+		if (ship1.getHealth()>0)
 		for (int i = 0; i < ship1.getAmmoCount(); i++) {
 			canvas.fillOval(x1+i*spacing, y-offset-size/2, size, size);
 		}
+		if (ship2.getHealth()>0)
 		for (int i = 0; i < ship2.getAmmoCount(); i++) {
 			canvas.fillOval(x2+i*spacing, y-offset-size/2, size, size);
 		}
+		
+		if (ship1.getHealth()<=0 && ship2.getHealth()>0)
+			canvas.drawString("Player 2 Wins!!!", getWidth()/2, getHeight()/2);
+		else if (ship2.getHealth()<=0 && ship1.getHealth()>0)
+			canvas.drawString("Player 1 Wins!!!", getWidth()/2, getHeight()/2);
+		else if (ship1.getHealth()<=0 && ship2.getHealth()<=0)
+			canvas.drawString("TIE!!!", getWidth()/2, getHeight()/2);
 		
 	}
 
@@ -192,11 +212,11 @@ public class ArenaComponent extends JComponent {
 			
 			repaint();
 			
-			if (ship1.getHealth()<0) {
+			if (ship1.getHealth()<=0) {
 				ship1.x = 100000;
 				ship1.y = 100000;
 			}
-			if (ship2.getHealth()<0) {
+			if (ship2.getHealth()<=0) {
 				ship2.x = 100000;
 				ship2.y = 100000;
 			}
@@ -270,16 +290,16 @@ public class ArenaComponent extends JComponent {
 		public void keyPressed(KeyEvent e) {
 			System.out.println("keyPressed: " + e.getKeyCode());
 			
-			if (e.getKeyChar()=='w') {
+			if (e.getKeyChar()=='w'||e.getKeyChar()=='W') {
 				ship1.setAccelForward(true);
 			}
-			else if (e.getKeyChar()=='s') {
+			else if (e.getKeyChar()=='s'||e.getKeyChar()=='S') {
 				ship1.setAccelBackward(true);
 			}
-			else if (e.getKeyChar()=='a') {
+			else if (e.getKeyChar()=='a'||e.getKeyChar()=='A') {
 				ship1.setTurnLeft(true);
 			}
-			else if (e.getKeyChar()=='d') {
+			else if (e.getKeyChar()=='d'||e.getKeyChar()=='D') {
 				ship1.setTurnRight(true);
 			}
 			else if (e.getKeyCode()==38) {
@@ -295,14 +315,14 @@ public class ArenaComponent extends JComponent {
 				ship2.setTurnRight(true);
 			}
 			
-			else if (e.getKeyCode()==16) {
+			else if (e.getKeyChar()=='q'||e.getKeyChar()=='Q') {
 				int ID = ship1.useAmmo();
 				if (ID == ProjectileID) {
 					p1Projectiles.add(new Projectile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
 				} else if (ID == LaserBeamID) {
-					//TODO: implement
+					p1Projectiles.add(new LaserBeam((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
 				} else if (ID == HomingMissileID) {
-					//TODO: implement
+					p1Projectiles.add(new HomingMissile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
 				}
 			}
 			
@@ -311,9 +331,9 @@ public class ArenaComponent extends JComponent {
 				if (ID == ProjectileID) {
 					p2Projectiles.add(new Projectile((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
 				} else if (ID == LaserBeamID) {
-					//TODO: implement
+					p2Projectiles.add(new LaserBeam((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
 				} else if (ID == HomingMissileID) {
-					//TODO: implement
+					p2Projectiles.add(new HomingMissile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
 				}
 			}
 
@@ -323,16 +343,16 @@ public class ArenaComponent extends JComponent {
 		public void keyReleased(KeyEvent e) {
 			System.out.println("keyReleased: " + e.getKeyChar());
 			
-			if (e.getKeyChar()=='w') {
+			if (e.getKeyChar()=='w'||e.getKeyChar()=='W') {
 				ship1.setAccelForward(false);
 			}
-			else if (e.getKeyChar()=='s') {
+			else if (e.getKeyChar()=='s'||e.getKeyChar()=='S') {
 				ship1.setAccelBackward(false);
 			}
-			else if (e.getKeyChar()=='a') {
+			else if (e.getKeyChar()=='a'||e.getKeyChar()=='A') {
 				ship1.setTurnLeft(false);
 			}
-			else if (e.getKeyChar()=='d') {
+			else if (e.getKeyChar()=='d'||e.getKeyChar()=='D') {
 				ship1.setTurnRight(false);
 			}
 			else if (e.getKeyCode()==38) {
