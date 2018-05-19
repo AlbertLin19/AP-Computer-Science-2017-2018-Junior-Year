@@ -36,8 +36,6 @@ public class HomingMissile extends Ammo {
 				targetAngle-=2*Math.PI;
 			}
 		}
-		
-		System.out.println("Target: " + targetAngle + "Initial: " + initialAngle);
 		if (targetAngle > initialAngle) {
 			if (targetAngle - initialAngle < Math.PI/2)
 				changeAngle(turnSpeed);
