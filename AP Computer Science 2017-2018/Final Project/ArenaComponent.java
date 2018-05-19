@@ -21,7 +21,7 @@ import javax.swing.Timer;
 public class ArenaComponent extends JComponent {
 
 	static final int ProjectileID = 1, LaserBeamID = 2, HomingMissileID = 3;
-	static final int gameTickPeriod = 20, itemDropPeriod = 5000;
+	static final int gameTickPeriod = 20, itemDropPeriod = 3000;
 
 	ArrayList<Ammo> p1Projectiles = new ArrayList<Ammo>();
 	ArrayList<Ammo> p2Projectiles = new ArrayList<Ammo>();
@@ -203,6 +203,9 @@ public class ArenaComponent extends JComponent {
 			
 			for (int i = 0; i < p1Projectiles.size(); i++) {
 				Point prevPoint = new Point((int) p1Projectiles.get(i).getCenterX(), (int) p1Projectiles.get(i).getCenterY());
+				if (p1Projectiles.get(i) instanceof HomingMissile) {
+					((HomingMissile) p1Projectiles.get(i)).turnTo((int) ship2.getCenterX(), (int) ship2.getCenterY());
+				}
 				p1Projectiles.get(i).moveTick();
 				Point nextPoint = new Point((int) p1Projectiles.get(i).getCenterX(), (int) p1Projectiles.get(i).getCenterY());
 				if (new Line2D.Double(prevPoint, nextPoint).intersects(ship2.getBounds2D())) {
@@ -215,6 +218,9 @@ public class ArenaComponent extends JComponent {
 			}
 			for (int i = 0; i < p2Projectiles.size(); i++) {
 				Point prevPoint = new Point((int) p2Projectiles.get(i).getCenterX(), (int) p2Projectiles.get(i).getCenterY());
+				if (p2Projectiles.get(i) instanceof HomingMissile) {
+					((HomingMissile) p2Projectiles.get(i)).turnTo((int) ship1.getCenterX(), (int) ship1.getCenterY());
+				}
 				p2Projectiles.get(i).moveTick();
 				Point nextPoint = new Point((int) p2Projectiles.get(i).getCenterX(), (int) p2Projectiles.get(i).getCenterY());
 				if (new Line2D.Double(prevPoint, nextPoint).intersects(ship1.getBounds2D())) {
@@ -271,6 +277,9 @@ public class ArenaComponent extends JComponent {
 		}
 		for (int i = 0; i < p2Projectiles.size(); i++) {
 			p2Projectiles.remove(0);
+		}
+		for (int i = 0; i < itemDrops.size(); i++) {
+			itemDrops.remove(0);
 		}
 		
 		//nullify the ships
