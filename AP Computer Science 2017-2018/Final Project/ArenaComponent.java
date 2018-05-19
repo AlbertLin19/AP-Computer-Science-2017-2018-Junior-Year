@@ -21,20 +21,24 @@ import javax.swing.Timer;
 public class ArenaComponent extends JComponent {
 
 	static final int ProjectileID = 1, LaserBeamID = 2, HomingMissileID = 3;
+	static final int gameTickPeriod = 20, itemDropPeriod = 5000;
 
 	ArrayList<Ammo> p1Projectiles = new ArrayList<Ammo>();
 	ArrayList<Ammo> p2Projectiles = new ArrayList<Ammo>();
 	Spaceship ship1, ship2;
+	
+	ArrayList<Item> itemDrops = new ArrayList<Item>();
 
 	BufferedImage backgroundImage;
 	
 	Timer gameTickTimer;
+	Timer itemDropTimer;
 
 	public ArenaComponent() {
 		this.addKeyListener(new KeyBinder());
 
-		gameTickTimer = new Timer(40, new GameTickTimer());
-		
+		gameTickTimer = new Timer(gameTickPeriod, new GameTickTimer());
+		itemDropTimer = new Timer(itemDropPeriod, new ItemDropTimer());
 		// load background image
 		try {
 			backgroundImage = ImageIO.read(new File("FinalProjectParallaxGameGraphics/spaceBackground.jpg"));
@@ -48,7 +52,7 @@ public class ArenaComponent extends JComponent {
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D canvas = (Graphics2D) g;
-		Font myFont = new Font("Game Font", Font.BOLD, 20);
+		Font myFont = new Font("Game Font", Font.BOLD, 40);
 		canvas.setFont(myFont);
 		canvas.fillRect(0, 0, getWidth(), getHeight());
 		
@@ -67,14 +71,14 @@ public class ArenaComponent extends JComponent {
 		for (Ammo ammo : p1Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
-			canvas.drawImage(ammo.getIcon(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
+			canvas.drawImage(ammo.getImage(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
 			canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
 		AffineTransform transform1 = AffineTransform.getRotateInstance(-ship1.getVelocityAngle()+Math.PI/2, ship1.getCenterX(), ship1.getCenterY());
 		canvas.setTransform(transform1);
-		canvas.drawImage(ship1.getIcon(), (int) (ship1.getX()-ship1.getWidth()/2), (int) ship1.getY(), (int) ship1.getWidth()*2, (int) ship1.getHeight(), null);
+		canvas.drawImage(ship1.getImage(), (int) (ship1.getX()-ship1.getWidth()/2), (int) ship1.getY(), (int) ship1.getWidth()*2, (int) ship1.getHeight(), null);
 		canvas.setColor(Color.CYAN);
 		canvas.draw(ship1);
 		canvas.setTransform(old);
@@ -84,18 +88,27 @@ public class ArenaComponent extends JComponent {
 		for (Ammo ammo : p2Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
 			canvas.setTransform(transform);
-			canvas.drawImage(ammo.getIcon(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
+			canvas.drawImage(ammo.getImage(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
 			canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
 		AffineTransform transform2 = AffineTransform.getRotateInstance(-ship2.getVelocityAngle()+Math.PI/2, ship2.getCenterX(), ship2.getCenterY());
 		canvas.setTransform(transform2);
-		canvas.drawImage(ship2.getIcon(), (int) (ship2.getX()-ship2.getWidth()/2), (int) ship2.getY(), (int) ship2.getWidth()*2, (int) ship2.getHeight(), null);
+		canvas.drawImage(ship2.getImage(), (int) (ship2.getX()-ship2.getWidth()/2), (int) ship2.getY(), (int) ship2.getWidth()*2, (int) ship2.getHeight(), null);
 		canvas.setColor(Color.RED);
 		canvas.draw(ship2);
 		canvas.setTransform(old);
 		canvas.drawString("P2", (int) ship2.getCenterX(), (int) ship2.getY()-30);
+		
+		//draw items dropped
+		for (Item item : itemDrops) {
+			AffineTransform transformItem = AffineTransform.getRotateInstance(item.getVelocityAngle(), item.getCenterX(), item.getCenterY());
+			canvas.setTransform(transformItem);
+			canvas.drawImage(item.getImage(), (int) (item.getX()), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight(), null);
+			canvas.setTransform(old);
+			canvas.draw(item.getBounds2D());
+		}
 		
 		//drawing health bars, shield bars, and game info
 		int barHeight = 30;
@@ -148,22 +161,27 @@ public class ArenaComponent extends JComponent {
 			canvas.fillOval(x2+i*spacing, y-offset-size/2, size, size);
 		}
 		
+		Font endFont = new Font("End Font", Font.BOLD, 80);
+		canvas.setFont(endFont);
+		
 		if (ship1.getHealth()<=0 && ship2.getHealth()>0)
-			canvas.drawString("Player 2 Wins!!!", getWidth()/2, getHeight()/2);
+			canvas.drawString("Player 2 Wins!!!", getWidth()/2-200, getHeight()/2);
 		else if (ship2.getHealth()<=0 && ship1.getHealth()>0)
-			canvas.drawString("Player 1 Wins!!!", getWidth()/2, getHeight()/2);
+			canvas.drawString("Player 1 Wins!!!", getWidth()/2-200, getHeight()/2);
 		else if (ship1.getHealth()<=0 && ship2.getHealth()<=0)
-			canvas.drawString("TIE!!!", getWidth()/2, getHeight()/2);
+			canvas.drawString("TIE!!!", getWidth()/2-200, getHeight()/2);
 		
 	}
 
 	public void startGame() {
 		gameTickTimer.stop();
+		itemDropTimer.stop();
 		removeAllPieces();
 		ship1 = new Spaceship(100, 100, Math.PI*3/2, 0);
 		ship2 = new Spaceship(getWidth()-100, getHeight()-200, Math.PI/2, 0);
 		
 		gameTickTimer.start();
+		itemDropTimer.start();
 	}
 
 	// defining the game tick actions
@@ -208,6 +226,17 @@ public class ArenaComponent extends JComponent {
 				}
 			}
 			
+			//check item pickups
+			for (int i = 0; i < itemDrops.size(); i++) {
+				if (ship1.intersects(itemDrops.get(i).getBounds2D())) {
+					ship1.addAmmo(itemDrops.remove(i).itemID);
+					i--;
+				} else if (ship2.intersects(itemDrops.get(i).getBounds2D())) {
+					ship2.addAmmo(itemDrops.remove(i).itemID);
+					i--;
+				}
+			}
+			
 			keepShipsInFrame();
 			
 			repaint();
@@ -223,6 +252,16 @@ public class ArenaComponent extends JComponent {
 
 		}
 
+	}
+	
+	//defining item drop actions for timer
+	class ItemDropTimer implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			itemDrops.add(new Item((int) (Math.random()*(getWidth()-400))+200, (int) (Math.random()*(getHeight()-400))+200, (int) (Math.random()*2)+2));
+		}
+		
 	}
 
 	private void removeAllPieces() {
@@ -331,9 +370,9 @@ public class ArenaComponent extends JComponent {
 				if (ID == ProjectileID) {
 					p2Projectiles.add(new Projectile((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
 				} else if (ID == LaserBeamID) {
-					p2Projectiles.add(new LaserBeam((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
+					p2Projectiles.add(new LaserBeam((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
 				} else if (ID == HomingMissileID) {
-					p2Projectiles.add(new HomingMissile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
+					p2Projectiles.add(new HomingMissile((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
 				}
 			}
 

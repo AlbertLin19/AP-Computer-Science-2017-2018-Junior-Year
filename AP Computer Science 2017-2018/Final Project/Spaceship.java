@@ -10,7 +10,7 @@ import javax.swing.Timer;
 
 public class Spaceship extends MovableGamePiece {
 
-	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 12, width = 40, height = 100, turnAccel = 0.1, accel = 0.6;
+	final static double healthMax = 1000, shieldMax = 200, maxSpeed = 0.3*ArenaComponent.gameTickPeriod, width = 40, height = 100, turnAccel = 0.1/40*ArenaComponent.gameTickPeriod, accel = 0.6/40*ArenaComponent.gameTickPeriod;
 	final static int reloadTime = 1500, shieldRefreshTime = 5000;
 	private double health, damageMult, shield;
 	private boolean accelForward, accelBackward, turnLeft, turnRight = false;

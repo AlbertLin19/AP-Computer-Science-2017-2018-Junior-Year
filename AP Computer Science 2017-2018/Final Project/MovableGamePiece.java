@@ -33,8 +33,12 @@ public abstract class MovableGamePiece extends Ellipse2D.Double {
 		return velocity.getAngle();
 	}
 	
-	public BufferedImage getIcon() {
+	public BufferedImage getImage() {
 		return image;
+	}
+	
+	public void setImage(BufferedImage imgIn) {
+		image = imgIn;
 	}
 	
 	abstract public BufferedImage loadIcon() throws IOException;
