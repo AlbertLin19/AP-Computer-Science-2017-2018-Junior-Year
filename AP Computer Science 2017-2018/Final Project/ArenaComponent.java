@@ -65,7 +65,6 @@ public class ArenaComponent extends JComponent {
 		AffineTransform old = canvas.getTransform();
 		
 		// draw the projectiles for each player in different colors
-		
 		canvas.setColor(Color.CYAN);
 		for (Ammo ammo : p1Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
