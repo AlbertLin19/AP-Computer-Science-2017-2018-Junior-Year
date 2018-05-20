@@ -5,7 +5,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class HomingMissile extends Ammo {
-	private final static double size = 80, damage = 400, speed = 0.4*ArenaComponent.gameTickPeriod, turnSpeed = 0.06;
+	private final static double damage = 400, speed = 0.4*ArenaComponent.gameTickPeriod, turnSpeed = 0.06;
+	public final static double size = 80;
 	
 	public HomingMissile(int xLoc, int yLoc, double angle) {
 		super(xLoc, yLoc, angle, speed, size, size, damage);
