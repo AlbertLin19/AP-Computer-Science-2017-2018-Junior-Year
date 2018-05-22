@@ -6,8 +6,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class LaserBeam extends Ammo {
-	private final static double damage = 600, speed = 1*ArenaComponent.gameTickPeriod;
-	public final static double width = 800, height = 80;
+	private final static double damage = 600, speed = 3*ArenaComponent.gameTickPeriod;
+	public final static double width = 1600, height = 80;
 	
 	public LaserBeam(int xLoc, int yLoc, double angle) {
 		super(xLoc, yLoc, angle, speed, width, height, damage);

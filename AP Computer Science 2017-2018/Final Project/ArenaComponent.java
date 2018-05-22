@@ -68,9 +68,12 @@ public class ArenaComponent extends JComponent {
 		canvas.setColor(Color.CYAN);
 		for (Ammo ammo : p1Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
+			if (ammo instanceof LaserBeam) {
+				transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle(), ammo.getCenterX(), ammo.getCenterY());
+			}
 			canvas.setTransform(transform);
 			canvas.drawImage(ammo.getImage(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
-			canvas.draw(ammo);
+			//canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
@@ -78,16 +81,19 @@ public class ArenaComponent extends JComponent {
 		canvas.setTransform(transform1);
 		canvas.drawImage(ship1.getImage(), (int) (ship1.getX()-ship1.getWidth()/2), (int) ship1.getY(), (int) ship1.getWidth()*2, (int) ship1.getHeight(), null);
 		canvas.setColor(Color.CYAN);
-		canvas.draw(ship1);
+		//canvas.draw(ship1);
 		canvas.setTransform(old);
 		canvas.drawString("P1", (int) ship1.getCenterX(), (int) ship1.getY()-30);
 		
 		canvas.setColor(Color.RED);
 		for (Ammo ammo : p2Projectiles) {
 			AffineTransform transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle()+Math.PI/2, ammo.getCenterX(), ammo.getCenterY());
+			if (ammo instanceof LaserBeam) {
+				transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle(), ammo.getCenterX(), ammo.getCenterY());
+			}
 			canvas.setTransform(transform);
 			canvas.drawImage(ammo.getImage(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
-			canvas.draw(ammo);
+			//canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
@@ -95,7 +101,7 @@ public class ArenaComponent extends JComponent {
 		canvas.setTransform(transform2);
 		canvas.drawImage(ship2.getImage(), (int) (ship2.getX()-ship2.getWidth()/2), (int) ship2.getY(), (int) ship2.getWidth()*2, (int) ship2.getHeight(), null);
 		canvas.setColor(Color.RED);
-		canvas.draw(ship2);
+		//canvas.draw(ship2);
 		canvas.setTransform(old);
 		canvas.drawString("P2", (int) ship2.getCenterX(), (int) ship2.getY()-30);
 		
@@ -105,7 +111,7 @@ public class ArenaComponent extends JComponent {
 			canvas.setTransform(transformItem);
 			canvas.drawImage(item.getImage(), (int) (item.getX()), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight(), null);
 			canvas.setTransform(old);
-			canvas.draw(item.getBounds2D());
+			//canvas.draw(item.getBounds2D());
 		}
 		
 		//drawing health bars, shield bars, and game info
@@ -364,11 +370,11 @@ public class ArenaComponent extends JComponent {
 			else if (e.getKeyChar()=='q'||e.getKeyChar()=='Q') {
 				int ID = ship1.useAmmo();
 				if (ID == ProjectileID) {
-					p1Projectiles.add(new Projectile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
+					p1Projectiles.add(new Projectile((int) (ship1.getCenterX()-Projectile.size/2), (int) (ship1.getCenterY()-Projectile.size/2), ship1.getVelocityAngle()));
 				} else if (ID == LaserBeamID) {
-					p1Projectiles.add(new LaserBeam((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
+					p1Projectiles.add(new LaserBeam((int) (ship1.getCenterX()-LaserBeam.width/2), (int) (ship1.getCenterY()-LaserBeam.height/2), ship1.getVelocityAngle()));
 				} else if (ID == HomingMissileID) {
-					p1Projectiles.add(new HomingMissile((int) ship1.getCenterX(), (int) ship1.getCenterY(), ship1.getVelocityAngle()));
+					p1Projectiles.add(new HomingMissile((int) (ship1.getCenterX()-HomingMissile.size/2), (int) (ship1.getCenterY()-HomingMissile.size/2), ship1.getVelocityAngle()));
 				}
 			}
 			
