@@ -21,7 +21,7 @@ public class Item extends MovableGamePiece {
 
 	@Override
 	public BufferedImage loadIcon() throws IOException {
-		if (itemID == ArenaComponent.LaserBeamID) {
+		if (itemID == ArenaComponent.LASER_BEAM_ID) {
 			return ImageIO.read(new File("FinalProjectParallaxGameGraphics/laserbeam.png"));
 		} else {
 			return ImageIO.read(new File("FinalProjectParallaxGameGraphics/homingMissile.png"));

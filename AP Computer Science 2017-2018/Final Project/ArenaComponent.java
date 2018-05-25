@@ -20,7 +20,7 @@ import javax.swing.Timer;
 
 public class ArenaComponent extends JComponent {
 
-	static final int ProjectileID = 1, LaserBeamID = 2, HomingMissileID = 3;
+	static final int PROJECTILE_ID = 1, LASER_BEAM_ID = 2, HOMING_MISSILE_ID = 3;
 	static final int gameTickPeriod = 20, itemDropPeriod = 3000;
 
 	ArrayList<Ammo> p1Projectiles = new ArrayList<Ammo>();
@@ -149,16 +149,26 @@ public class ArenaComponent extends JComponent {
 		int size = 16;
 		int offset = 10;
 		
+		ArrayList<Integer> ship1Ammo = ship1.getAmmoInventory();
+		ArrayList<Integer> ship2Ammo = ship2.getAmmoInventory();
+		
 		canvas.setColor(Color.DARK_GRAY);
 		if (ship1.getHealth()>0)
 		canvas.fillRect(x1, y-2*offset, barWidth, 2*offset);
 		if (ship2.getHealth()>0)
 		canvas.fillRect(x2, y-2*offset, barWidth, 2*offset);
 		
-		canvas.setColor(Color.ORANGE);
 		if (ship1.getHealth()>0)
-		for (int i = 0; i < ship1.getAmmoCount(); i++) {
-			canvas.fillOval(x1+i*spacing, y-offset-size/2, size, size);
+		for (int ammoID : ship1Ammo) {
+			if (ammoID == PROJECTILE_ID) {
+				//canvas.fillOval(x1+i*spacing, y-offset-size/2, size, size);
+				//canvas.drawImage(Projectile.loadIcon(), (int) (item.getX()), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight(), null);
+				
+			} else if (ammoID == LASER_BEAM_ID) {
+				
+			} else if (ammoID == HOMING_MISSILE_ID) {
+				
+			}
 		}
 		if (ship2.getHealth()>0)
 		for (int i = 0; i < ship2.getAmmoCount(); i++) {
@@ -167,7 +177,7 @@ public class ArenaComponent extends JComponent {
 		
 		Font endFont = new Font("End Font", Font.BOLD, 80);
 		canvas.setFont(endFont);
-		
+		canvas.setColor(new Color(255, 235, 215));
 		if (ship1.getHealth()<=0 && ship2.getHealth()>0)
 			canvas.drawString("Player 2 Wins!!!", getWidth()/2-200, getHeight()/2);
 		else if (ship2.getHealth()<=0 && ship1.getHealth()>0)
@@ -369,23 +379,23 @@ public class ArenaComponent extends JComponent {
 			
 			else if (e.getKeyChar()=='q'||e.getKeyChar()=='Q') {
 				int ID = ship1.useAmmo();
-				if (ID == ProjectileID) {
+				if (ID == PROJECTILE_ID) {
 					p1Projectiles.add(new Projectile((int) (ship1.getCenterX()-Projectile.size/2), (int) (ship1.getCenterY()-Projectile.size/2), ship1.getVelocityAngle()));
-				} else if (ID == LaserBeamID) {
+				} else if (ID == LASER_BEAM_ID) {
 					p1Projectiles.add(new LaserBeam((int) (ship1.getCenterX()-LaserBeam.width/2), (int) (ship1.getCenterY()-LaserBeam.height/2), ship1.getVelocityAngle()));
-				} else if (ID == HomingMissileID) {
+				} else if (ID == HOMING_MISSILE_ID) {
 					p1Projectiles.add(new HomingMissile((int) (ship1.getCenterX()-HomingMissile.size/2), (int) (ship1.getCenterY()-HomingMissile.size/2), ship1.getVelocityAngle()));
 				}
 			}
 			
-			else if (e.getKeyCode()==32) {
+			else if (e.getKeyCode()==17) {
 				int ID = ship2.useAmmo();
-				if (ID == ProjectileID) {
-					p2Projectiles.add(new Projectile((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
-				} else if (ID == LaserBeamID) {
-					p2Projectiles.add(new LaserBeam((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
-				} else if (ID == HomingMissileID) {
-					p2Projectiles.add(new HomingMissile((int) ship2.getCenterX(), (int) ship2.getCenterY(), ship2.getVelocityAngle()));
+				if (ID == PROJECTILE_ID) {
+					p2Projectiles.add(new Projectile((int) (ship2.getCenterX()-Projectile.size/2), (int) (ship2.getCenterY()-Projectile.size/2), ship2.getVelocityAngle()));
+				} else if (ID == LASER_BEAM_ID) {
+					p2Projectiles.add(new LaserBeam((int) (ship2.getCenterX()-LaserBeam.width/2), (int) (ship2.getCenterY()-LaserBeam.height/2), ship2.getVelocityAngle()));
+				} else if (ID == HOMING_MISSILE_ID) {
+					p2Projectiles.add(new HomingMissile((int) (ship2.getCenterX()-HomingMissile.size/2), (int) (ship2.getCenterY()-HomingMissile.size/2), ship2.getVelocityAngle()));
 				}
 			}
 

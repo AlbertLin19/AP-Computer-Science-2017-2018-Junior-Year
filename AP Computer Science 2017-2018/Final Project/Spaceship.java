@@ -33,7 +33,7 @@ public class Spaceship extends MovableGamePiece {
 		//filling up ammo inventory with default weapon
 		ammoInventory = new ArrayList<Integer>();
 		for (int i = 0; i < maxAmmoCount; i++) {
-			ammoInventory.add(ArenaComponent.ProjectileID);
+			ammoInventory.add(ArenaComponent.PROJECTILE_ID);
 		}
 		
 		//setting up the object's constant refreshers
@@ -72,6 +72,10 @@ public class Spaceship extends MovableGamePiece {
 		while (ammoInventory.size()>5) {
 			ammoInventory.remove(0);
 		}
+	}
+	
+	public ArrayList<Integer> getAmmoInventory() {
+		return ammoInventory;
 	}
 	
 	public void changeSpeed(double speedChange) {
@@ -127,7 +131,7 @@ public class Spaceship extends MovableGamePiece {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (ammoInventory.size() < maxAmmoCount) {
-				ammoInventory.add(ArenaComponent.ProjectileID);
+				ammoInventory.add(ArenaComponent.PROJECTILE_ID);
 			}
 			
 		}
