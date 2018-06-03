@@ -1,8 +1,4 @@
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 
 public class HomingMissile extends Ammo {
 	private final static double damage = 400, speed = 0.4*ArenaComponent.gameTickPeriod, turnSpeed = 0.09;
@@ -10,11 +6,6 @@ public class HomingMissile extends Ammo {
 	
 	public HomingMissile(int xLoc, int yLoc, double angle) {
 		super(xLoc, yLoc, angle, speed, size, size, damage);
-	}
-
-	@Override
-	public BufferedImage loadIcon() throws IOException {
-		return ImageIO.read(new File("FinalProjectParallaxGameGraphics/homingMissile.png"));
 	}
 	
 	public void turnTo(int xTgt, int yTgt) {

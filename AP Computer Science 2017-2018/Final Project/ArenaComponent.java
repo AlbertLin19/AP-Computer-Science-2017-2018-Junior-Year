@@ -22,6 +22,7 @@ public class ArenaComponent extends JComponent {
 
 	static final int PROJECTILE_ID = 1, LASER_BEAM_ID = 2, HOMING_MISSILE_ID = 3;
 	static final int gameTickPeriod = 20, itemDropPeriod = 3000;
+	static BufferedImage projectileIcon, laserBeamIcon, homingMissileIcon, spaceshipIcon;
 
 	ArrayList<Ammo> p1Projectiles = new ArrayList<Ammo>();
 	ArrayList<Ammo> p2Projectiles = new ArrayList<Ammo>();
@@ -44,6 +45,16 @@ public class ArenaComponent extends JComponent {
 			backgroundImage = ImageIO.read(new File("FinalProjectParallaxGameGraphics/spaceBackground.jpg"));
 		} catch (IOException e) {
 			System.out.println("ERROR! COULD NOT LOAD AWESOME BACKGROUND PICTURE");
+			e.printStackTrace();
+		}
+		
+		try {
+			projectileIcon = ImageIO.read(new File("FinalProjectParallaxGameGraphics/blueEnergyBall.png"));
+			laserBeamIcon = ImageIO.read(new File("FinalProjectParallaxGameGraphics/laserBeam.png"));
+			homingMissileIcon = ImageIO.read(new File("FinalProjectParallaxGameGraphics/homingMissile.png"));
+			spaceshipIcon = ImageIO.read(new File("FinalProjectParallaxGameGraphics/fighterJet.png"));
+		} catch (IOException e) {
+			System.out.println("Cannot load the icon for the game piece BufferedImage for ArenaComponent.");
 			e.printStackTrace();
 		}
 		
@@ -72,14 +83,24 @@ public class ArenaComponent extends JComponent {
 				transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle(), ammo.getCenterX(), ammo.getCenterY());
 			}
 			canvas.setTransform(transform);
-			canvas.drawImage(ammo.getImage(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
+			BufferedImage ammoIcon = null;
+			
+			if (ammo instanceof Projectile) {
+				ammoIcon = projectileIcon;
+			} else if (ammo instanceof LaserBeam) {
+				ammoIcon = laserBeamIcon;
+			} else if (ammo instanceof HomingMissile) {
+				ammoIcon = homingMissileIcon;
+			}
+			
+			canvas.drawImage(ammoIcon, (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
 			//canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
 		AffineTransform transform1 = AffineTransform.getRotateInstance(-ship1.getVelocityAngle()+Math.PI/2, ship1.getCenterX(), ship1.getCenterY());
 		canvas.setTransform(transform1);
-		canvas.drawImage(ship1.getImage(), (int) (ship1.getX()-ship1.getWidth()/2), (int) ship1.getY(), (int) ship1.getWidth()*2, (int) ship1.getHeight(), null);
+		canvas.drawImage(spaceshipIcon, (int) (ship1.getX()-ship1.getWidth()/2), (int) ship1.getY(), (int) ship1.getWidth()*2, (int) ship1.getHeight(), null);
 		canvas.setColor(Color.CYAN);
 		//canvas.draw(ship1);
 		canvas.setTransform(old);
@@ -92,14 +113,24 @@ public class ArenaComponent extends JComponent {
 				transform = AffineTransform.getRotateInstance(-ammo.getVelocityAngle(), ammo.getCenterX(), ammo.getCenterY());
 			}
 			canvas.setTransform(transform);
-			canvas.drawImage(ammo.getImage(), (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
+			
+			BufferedImage ammoIcon = null;
+			
+			if (ammo instanceof Projectile) {
+				ammoIcon = projectileIcon;
+			} else if (ammo instanceof LaserBeam) {
+				ammoIcon = laserBeamIcon;
+			} else if (ammo instanceof HomingMissile) {
+				ammoIcon = homingMissileIcon;
+			}
+			canvas.drawImage(ammoIcon, (int) ammo.getX(), (int) ammo.getY(), (int) ammo.getWidth(), (int) ammo.getHeight(), null);
 			//canvas.draw(ammo);
 			canvas.setTransform(old);
 		}
 		
 		AffineTransform transform2 = AffineTransform.getRotateInstance(-ship2.getVelocityAngle()+Math.PI/2, ship2.getCenterX(), ship2.getCenterY());
 		canvas.setTransform(transform2);
-		canvas.drawImage(ship2.getImage(), (int) (ship2.getX()-ship2.getWidth()/2), (int) ship2.getY(), (int) ship2.getWidth()*2, (int) ship2.getHeight(), null);
+		canvas.drawImage(spaceshipIcon, (int) (ship2.getX()-ship2.getWidth()/2), (int) ship2.getY(), (int) ship2.getWidth()*2, (int) ship2.getHeight(), null);
 		canvas.setColor(Color.RED);
 		//canvas.draw(ship2);
 		canvas.setTransform(old);
@@ -109,7 +140,14 @@ public class ArenaComponent extends JComponent {
 		for (Item item : itemDrops) {
 			AffineTransform transformItem = AffineTransform.getRotateInstance(item.getVelocityAngle(), item.getCenterX(), item.getCenterY());
 			canvas.setTransform(transformItem);
-			canvas.drawImage(item.getImage(), (int) (item.getX()), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight(), null);
+			BufferedImage ammoIcon = null;
+			
+			if (item.getID() == 2) {
+				ammoIcon = laserBeamIcon;
+			} else if (item.getID() == 3) {
+				ammoIcon = homingMissileIcon;
+			}
+			canvas.drawImage(ammoIcon, (int) (item.getX()), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight(), null);
 			canvas.setTransform(old);
 			//canvas.draw(item.getBounds2D());
 		}
@@ -149,40 +187,53 @@ public class ArenaComponent extends JComponent {
 		int size = 16;
 		int offset = 10;
 		
+		boolean ship1Alive = ship1.getHealth()>0;
+		boolean ship2Alive = ship2.getHealth()>0;
+		
 		ArrayList<Integer> ship1Ammo = ship1.getAmmoInventory();
 		ArrayList<Integer> ship2Ammo = ship2.getAmmoInventory();
 		
+		//making the background for status indicators
 		canvas.setColor(Color.DARK_GRAY);
-		if (ship1.getHealth()>0)
+		if (ship1Alive)
 		canvas.fillRect(x1, y-2*offset, barWidth, 2*offset);
-		if (ship2.getHealth()>0)
+		if (ship2Alive)
 		canvas.fillRect(x2, y-2*offset, barWidth, 2*offset);
 		
-		if (ship1.getHealth()>0)
-		for (int ammoID : ship1Ammo) {
+		//painting ammo
+		if (ship1Alive)
+		for (int i = 0; i < ship1Ammo.size(); i++) {
+			
+			int ammoID = ship1Ammo.get(i);
 			if (ammoID == PROJECTILE_ID) {
-				//canvas.fillOval(x1+i*spacing, y-offset-size/2, size, size);
-				//canvas.drawImage(Projectile.loadIcon(), (int) (item.getX()), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight(), null);
-				
+				canvas.drawImage(projectileIcon, x1+i*spacing, y-offset-size/2, size, size, null);
 			} else if (ammoID == LASER_BEAM_ID) {
-				
+				canvas.drawImage(laserBeamIcon, x1+i*spacing, y-offset-size/2, size, size, null);
 			} else if (ammoID == HOMING_MISSILE_ID) {
-				
+				canvas.drawImage(homingMissileIcon, x1+i*spacing, y-offset-size/2, size, size, null);
 			}
 		}
-		if (ship2.getHealth()>0)
-		for (int i = 0; i < ship2.getAmmoCount(); i++) {
-			canvas.fillOval(x2+i*spacing, y-offset-size/2, size, size);
+		if (ship2Alive)
+		for (int i = 0; i < ship2Ammo.size(); i++) {
+
+			int ammoID = ship2Ammo.get(i);
+			if (ammoID == PROJECTILE_ID) {
+				canvas.drawImage(projectileIcon, x2+i*spacing, y-offset-size/2, size, size, null);
+			} else if (ammoID == LASER_BEAM_ID) {
+				canvas.drawImage(laserBeamIcon, x2+i*spacing, y-offset-size/2, size, size, null);
+			} else if (ammoID == HOMING_MISSILE_ID) {
+				canvas.drawImage(homingMissileIcon, x2+i*spacing, y-offset-size/2, size, size, null);
+			}
 		}
 		
 		Font endFont = new Font("End Font", Font.BOLD, 80);
 		canvas.setFont(endFont);
 		canvas.setColor(new Color(255, 235, 215));
-		if (ship1.getHealth()<=0 && ship2.getHealth()>0)
+		if (!ship1Alive && ship2Alive)
 			canvas.drawString("Player 2 Wins!!!", getWidth()/2-200, getHeight()/2);
-		else if (ship2.getHealth()<=0 && ship1.getHealth()>0)
+		else if (!ship2Alive && ship1Alive)
 			canvas.drawString("Player 1 Wins!!!", getWidth()/2-200, getHeight()/2);
-		else if (ship1.getHealth()<=0 && ship2.getHealth()<=0)
+		else if (!ship1Alive && !ship2Alive)
 			canvas.drawString("TIE!!!", getWidth()/2-200, getHeight()/2);
 		
 	}
@@ -388,7 +439,7 @@ public class ArenaComponent extends JComponent {
 				}
 			}
 			
-			else if (e.getKeyCode()==17) {
+			else if (e.getKeyCode()==16) {
 				int ID = ship2.useAmmo();
 				if (ID == PROJECTILE_ID) {
 					p2Projectiles.add(new Projectile((int) (ship2.getCenterX()-Projectile.size/2), (int) (ship2.getCenterY()-Projectile.size/2), ship2.getVelocityAngle()));
