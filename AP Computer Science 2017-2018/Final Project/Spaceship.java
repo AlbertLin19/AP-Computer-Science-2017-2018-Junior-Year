@@ -66,7 +66,9 @@ public class Spaceship extends MovableGamePiece {
 	public void addAmmo(int ammoID) {
 		ammoInventory.add(ammoID);
 		while (ammoInventory.size()>5) {
-			ammoInventory.remove(0);
+			if (!ammoInventory.remove(new Integer(ArenaComponent.PROJECTILE_ID))) {
+				ammoInventory.remove(0);
+			}
 		}
 	}
 	

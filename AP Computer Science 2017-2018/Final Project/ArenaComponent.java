@@ -142,9 +142,9 @@ public class ArenaComponent extends JComponent {
 			canvas.setTransform(transformItem);
 			BufferedImage ammoIcon = null;
 			
-			if (item.getID() == 2) {
+			if (item.getID() == LASER_BEAM_ID) {
 				ammoIcon = laserBeamIcon;
-			} else if (item.getID() == 3) {
+			} else if (item.getID() == HOMING_MISSILE_ID) {
 				ammoIcon = homingMissileIcon;
 			}
 			canvas.drawImage(ammoIcon, (int) (item.getX()), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight(), null);
