@@ -16,10 +16,13 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class ArenaComponent extends JComponent {
 
+	int ship1FireCode = 81, ship2FireCode = 16;
+	boolean takingKeyBindings1, takingKeyBindings2 = false;
 	static final int PROJECTILE_ID = 1, LASER_BEAM_ID = 2, HOMING_MISSILE_ID = 3;
 	static final int gameTickPeriod = 20, itemDropPeriod = 6000;
 	static BufferedImage projectileIcon, laserBeamIcon, homingMissileIcon, spaceshipIcon;
@@ -395,13 +398,13 @@ public class ArenaComponent extends JComponent {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
-			System.out.println("keyTyped: " + e.getKeyChar());
+			//System.out.println("keyTyped: " + e.getKeyChar());
 
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			System.out.println("keyPressed: " + e.getKeyCode());
+			//System.out.println("keyPressed: " + e.getKeyCode());
 			
 			if (e.getKeyChar()=='w'||e.getKeyChar()=='W') {
 				ship1.setAccelForward(true);
@@ -428,7 +431,7 @@ public class ArenaComponent extends JComponent {
 				ship2.setTurnRight(true);
 			}
 			
-			else if (e.getKeyChar()=='q'||e.getKeyChar()=='Q') {
+			else if (e.getKeyCode()==ship1FireCode) {
 				int ID = ship1.useAmmo();
 				if (ID == PROJECTILE_ID) {
 					p1Projectiles.add(new Projectile((int) (ship1.getCenterX()-Projectile.size/2), (int) (ship1.getCenterY()-Projectile.size/2), ship1.getVelocityAngle()));
@@ -439,7 +442,7 @@ public class ArenaComponent extends JComponent {
 				}
 			}
 			
-			else if (e.getKeyCode()==16) {
+			else if (e.getKeyCode()==ship2FireCode) {
 				int ID = ship2.useAmmo();
 				if (ID == PROJECTILE_ID) {
 					p2Projectiles.add(new Projectile((int) (ship2.getCenterX()-Projectile.size/2), (int) (ship2.getCenterY()-Projectile.size/2), ship2.getVelocityAngle()));
@@ -448,13 +451,19 @@ public class ArenaComponent extends JComponent {
 				} else if (ID == HOMING_MISSILE_ID) {
 					p2Projectiles.add(new HomingMissile((int) (ship2.getCenterX()-HomingMissile.size/2), (int) (ship2.getCenterY()-HomingMissile.size/2), ship2.getVelocityAngle()));
 				}
+			} else if (takingKeyBindings1) {
+				ship1FireCode = e.getKeyCode();
+				takingKeyBindings1 = false;
+			} else if (takingKeyBindings2) {
+				ship2FireCode = e.getKeyCode();
+				takingKeyBindings2 = false;
 			}
 
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			System.out.println("keyReleased: " + e.getKeyChar());
+			//System.out.println("keyReleased: " + e.getKeyChar());
 			
 			if (e.getKeyChar()=='w'||e.getKeyChar()=='W') {
 				ship1.setAccelForward(false);
@@ -483,5 +492,11 @@ public class ArenaComponent extends JComponent {
 
 		}
 
+	}
+
+	public void setKeyBindings() {
+		JOptionPane.showMessageDialog(null, "Key Binding Mode has been entered. The next 2 buttons you press will be assigned to ship 1's and ship 2's fire buttons respectively (given that the button is not already being used). You will need to click the restart button afterwards.");
+		takingKeyBindings1 = true;
+		takingKeyBindings2 = true;
 	}
 }

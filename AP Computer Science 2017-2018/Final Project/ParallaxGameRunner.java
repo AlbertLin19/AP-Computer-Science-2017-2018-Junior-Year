@@ -24,6 +24,8 @@ public class ParallaxGameRunner {
 		
 		JButton restarter = new JButton("Start");
 		restarter.setPreferredSize(new Dimension(300, 30));
+		JButton keyBinder = new JButton("Key Bindings");
+		keyBinder.setPreferredSize(new Dimension(300, 30));
 
 		ArenaComponent arenaComponent = new ArenaComponent();
 		arenaComponent.setPreferredSize(new Dimension(arenaWidth, arenaHeight));
@@ -34,6 +36,7 @@ public class ParallaxGameRunner {
 		
 		gamePanel.add(titleScreenComponent);
 		gamePanel.add(restarter);
+		gamePanel.add(keyBinder);
 		frame.add(gamePanel);
 		// GUI parts initialized above
 		
@@ -47,6 +50,7 @@ public class ParallaxGameRunner {
 					gamePanel.removeAll();
 					gamePanel.add(arenaComponent);
 					gamePanel.add(restarter);
+					gamePanel.add(keyBinder);
 				}
 				
 				arenaComponent.grabFocus();
@@ -54,10 +58,16 @@ public class ParallaxGameRunner {
 				
 			}
 		}
-		
+		class KeyBindingButtonListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				
+				arenaComponent.setKeyBindings();
+				
+			}
+		}
 		//adding all the functions to the components
 		restarter.addActionListener(new BListener());
-		
+		keyBinder.addActionListener(new KeyBindingButtonListener());
 		frame.setVisible(true);
 
 	}
