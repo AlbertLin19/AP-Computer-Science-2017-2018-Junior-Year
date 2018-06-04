@@ -21,7 +21,7 @@ import javax.swing.Timer;
 public class ArenaComponent extends JComponent {
 
 	static final int PROJECTILE_ID = 1, LASER_BEAM_ID = 2, HOMING_MISSILE_ID = 3;
-	static final int gameTickPeriod = 20, itemDropPeriod = 3000;
+	static final int gameTickPeriod = 20, itemDropPeriod = 6000;
 	static BufferedImage projectileIcon, laserBeamIcon, homingMissileIcon, spaceshipIcon;
 
 	ArrayList<Ammo> p1Projectiles = new ArrayList<Ammo>();
