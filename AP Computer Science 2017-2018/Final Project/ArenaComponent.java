@@ -47,7 +47,7 @@ public class ArenaComponent extends JComponent {
 		try {
 			backgroundImage = ImageIO.read(new File("FinalProjectParallaxGameGraphics/spaceBackground.jpg"));
 		} catch (IOException e) {
-			System.out.println("ERROR! COULD NOT LOAD AWESOME BACKGROUND PICTURE");
+			System.out.println("ERROR! COULD NOT LOAD AWESOME BACKGROUND PICTURE! MAKE SURE YOU HAVE THE GRAPHICS FOLDER INSIDE THE SAME DIRECTORY AS THE RUNNABLE JAR!");
 			e.printStackTrace();
 		}
 		
@@ -57,7 +57,7 @@ public class ArenaComponent extends JComponent {
 			homingMissileIcon = ImageIO.read(new File("FinalProjectParallaxGameGraphics/homingMissile.png"));
 			spaceshipIcon = ImageIO.read(new File("FinalProjectParallaxGameGraphics/fighterJet.png"));
 		} catch (IOException e) {
-			System.out.println("Cannot load the icon for the game piece BufferedImage for ArenaComponent.");
+			System.out.println("Cannot load the icon for the game piece BufferedImage for ArenaComponent! MAKE SURE YOU HAVE THE GRAPHICS FOLDER INSIDE THE SAME DIRECTORY AS THE RUNNABLE JAR");
 			e.printStackTrace();
 		}
 		
@@ -73,7 +73,7 @@ public class ArenaComponent extends JComponent {
 		if (backgroundImage != null) {
 			canvas.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 		} else {
-			canvas.drawString("GRAPHICS FILE NOT FOUND! MAKE SURE YOU HAVE THE GRAPHICS FOLDER INSIDE THE PROJECT", getWidth()/2-300, getHeight()/2);
+			canvas.drawString("GRAPHICS FILE NOT FOUND! MAKE SURE YOU HAVE THE GRAPHICS FOLDER INSIDE THE SAME DIRECTORY AS THE RUNNABLE JAR", 150, getHeight()/2);
 		}
 
 		AffineTransform old = canvas.getTransform();
